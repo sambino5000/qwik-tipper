@@ -176,10 +176,10 @@
   resolved "https://registry.yarnpkg.com/@protobufjs/utf8/-/utf8-1.1.0.tgz#a777360b5b39a1a2e5106f8e858f2fd2d060c570"
   integrity sha512-Vvn3zZrhQZkkBE8LSuW3em98c0FwgO4nxzv6OdSxPKJIEKY2bGbHn+mhGIPerzI4twdxaP8/0+06HBpwf345Lw==
 
-"@samrock5000/cashscript@^0.7.0":
-  version "0.7.0"
-  resolved "https://registry.yarnpkg.com/@samrock5000/cashscript/-/cashscript-0.7.0.tgz#aba0721c29899f2af1c2442fe6c1d58f246b8b19"
-  integrity sha512-hfRWw66F1WmXkHCjJ+UA1Yw2Ec5x8U3izplkx+HYiRQAHMW9yKifhpdTNj9wh/hhs5ou2D/fBLiWSzpifNaDDA==
+"@samrock5000/cashscript@^0.7.1":
+  version "0.7.1"
+  resolved "https://registry.yarnpkg.com/@samrock5000/cashscript/-/cashscript-0.7.1.tgz#039ca94d95783200fa6f69a84c7d61ccb8898ac7"
+  integrity sha512-zz4r7/uXrmmOgMEp4GiPSc/v2ZHWpDVvqk2pKmxAcFMh6O9bIv6vgWIUp/q8r3sFTD3kLV7fToi2LikQU/dynQ==
   dependencies:
     "@bitauth/libauth" "^1.18.1"
     "@cashscript/utils" "^0.6.5"
