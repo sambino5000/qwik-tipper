@@ -8,14 +8,15 @@ import {
 } from "@builder.io/qwik";
 // import { Link } from '@builder.io/qwik-city';
 import { getP2phkContract } from "../../contracts";
-import QRCode from "qrcode";
+import { generate } from 'lean-qr';
+import { toSvg } from 'lean-qr/extras/svg';
 import type { Keys, SpendProps } from "../../interfaces";
 import { ChronikClient } from "chronik-client";
 export const log = console.log;
 
 export const CreateP2PKHContract = component$(() => {
     const showWIF = useStore({ show: false })
-    const txStatus = useStore<SpendProps>({ apicalls: 0, spent: false, satoshis: 0, rawHex: '', canSpend: false })
+    // const txStatus = useStore<SpendProps>({ apicalls: 0, spent: false, satoshis: 0, rawHex: '', canSpend: false })
     const store = useStore<Keys>({
         addr: "",
         addrScriptHash: '',
@@ -27,8 +28,6 @@ export const CreateP2PKHContract = component$(() => {
         // receiverPublicKeyHash: "",
         // receiverWif: ''
     });
-
-
 
     //TODO usecleanup()
     const contractResource = useResource$<Keys>(async ({ cleanup }) => {
@@ -61,11 +60,51 @@ export const CreateP2PKHContract = component$(() => {
     });
 
 
+    return (
+        <>
+            <div class="qrcode-container">
+            </div>
+            <div class="section">
+            </div>
+            <Resource
+                value={contractResource}
+                onPending={() => <>Loading...</>}
+                onRejected={(error) => <>Error: {error.message}</>}
+                onResolved={(store) => {
+                    return (
+                        <div>
+                            <TxStatus keys={store} />
+                            <DisplayKeysContent keys={store} />
+                        </div>
+
+                    );
+                }}
+            />
+
+        </>
+
+    );
+});
+
+export const TxStatus = component$((props: { keys: Keys }) => {
+    const txStatus = useStore<SpendProps>({ apicalls: 0, spent: false, satoshis: 0, rawHex: '', canSpend: false })
     useClientEffect$(async () => {
-        QRCode.toCanvas(document.getElementById("canvas"), store.addr);
+
+        const QRcode = generate(props.keys.addr);
+        const mySvg = document.getElementById('my-svg');
+        // @ts-ignore
+        const svg = toSvg(QRcode, mySvg, {
+            on: 'black',
+            off: 'transparent',
+            padX: 4,
+            padY: 4,
+            width: "200px",
+            height: "200px",
+            scale: 1,
+        });
         const getSats = async () => {
             const chronikClient = new ChronikClient("https://chronik.be.cash/xec")
-            const scriptHashAssert: string = store.addrScriptHash!
+            const scriptHashAssert: string = props.keys.addrScriptHash!
             const chronikUtxoResult = await chronikClient.script('p2sh', scriptHashAssert).utxos()
             // log(store.signerPublicKeyHash)
             const getUtxos = async (): Promise<any[]> => {
@@ -98,86 +137,54 @@ export const CreateP2PKHContract = component$(() => {
             return satoshis
         }
 
-        // const wif = document.getElementById("wif");
-        // wif.innerHTML = txStatus.spent ? store.receiverWif : 'wating';
         const interval = setInterval(async () => (log("contract address balance:", txStatus.satoshis = await getSats())), 800);
 
 
     });
+    return (<>
+        <div>
 
-
-    // txStatus.canSpend ?  : null
-
-    // const broadcastLink = <div>
-    //     <div style={{ display: (txStatus.canSpend) ? "block" : "none" }} >
-    //         <Link class="mindblow" href={`test/${store.addrScriptHash},${store.signerPrivateKey}`}>
-    //             {/* <button> Create Tip 🤯</button> */}
-    //             SPEND 🤯
-    //         </Link>
-    //     </div>
-    // </div>
-
-
-    return (
-        <>
-            <div class="qrcode-container">
-                <h1>Send Tip Amount</h1>
-                <div class="qrcode" id="qrcode" >
-                    <canvas datatype={store.addr}
-                        id="canvas"
-                        width="150"
-                        height="150"
-                    ></canvas>
-
-                </div>
-                <p>Tip Amount: {txStatus.satoshis}</p>
-
+            <h1>Send Tip</h1>
+            <div class="qrcode" id="qrcode" >
+                <svg //datatype={props.keys.addr}
+                    id="my-svg"
+                ></svg>
+                <p>Satoshis: {txStatus.satoshis}</p>
+                <p>{props.keys.addr}</p>
             </div>
-            <div class="section">
-                {/* <p id="addr"></p> */}
+            <BroadCastLink txStatus={txStatus} keys={props.keys} />
 
-            </div>
-            <Resource
-                value={contractResource}
-                onPending={() => <>Loading...</>}
-                onRejected={(error) => <>Error: {error.message}</>}
-                onResolved={(store) => {
-                    return (
-                        <div>
-                            {/* <a class='mindblow' > Create Tip 🤯</a> */}
-                            <p> {store.addr}</p>
-                            <div  >
-         
-                                    <button class="mind" onClick$={() => showWIF.show = !showWIF.show} >show address keys</button>
-                             
-                                <ul style={{ display: showWIF.show ? "show" : "none" }} >
+        </div></>)
+})
 
-                                    <li>addrScriptHash: {store.addrScriptHash}</li>
-                                    <li>signerPrivateKey: {store.signerPrivateKey}</li>
-                                    <li>signerPublicKeyHash: {store.signerPublicKeyHash}</li>
-                                    <li>signerPublicKey: {store.signerPublicKey}</li>
-                                </ul>
-                            </div>
-                            <div>
-                                {/* LINK TOOL BREAKS APP <Link class="mindblow" href={`/test/${store.signerPublicKeyHash},${store.signerPrivateKey}`}> */}
-                                <div style={{ display: (txStatus.canSpend) ? "block" : "none" }} >
-                                    <a class='mindblow' href={`/test/${store.signerPublicKeyHash},${store.signerPrivateKey}`}>
+export const DisplayKeysContent = component$((props: { keys: Keys }) => {
+    const showWIF = useStore({ show: false })
 
-                                        Create Tip 🤯
+    return (<>
+        <div  >
 
-                                    </a>
-                                </div>
-                            </div>
-                        </div>
+            <button class="mind" onClick$={() => showWIF.show = !showWIF.show} >show address keys</button>
 
-                    );
-                }}
-            />
-            {/* {txStatus.canSpend ? */}
-            {/* {broadcastLink} */}
-            {/* // : null} */}
-        </>
+            <ul style={{ display: showWIF.show ? "show" : "none" }} >
 
-    );
-});
+                <li>addrScriptHash: {props.keys.addrScriptHash}</li>
+                <li>signerPrivateKey: {props.keys.signerPrivateKey}</li>
+                <li>signerPublicKeyHash: {props.keys.signerPublicKeyHash}</li>
+                <li>signerPublicKey: {props.keys.signerPublicKey}</li>
+            </ul>
+        </div>
+    </>)
+})
+
+export const BroadCastLink = component$((props: { txStatus: SpendProps, keys: Keys }) => {
+
+    return (<>
+        {/* LINK TOOL BREAKS APP <Link class="mindblow" href={`/test/${store.signerPublicKeyHash},${store.signerPrivateKey}`}> */}
+        <div style={{ display: (props.txStatus.canSpend) ? "block" : "none" }} >
+            <a class='mindblow' href={`/test/${props.keys.signerPublicKeyHash},${props.keys.signerPrivateKey}`}>
+                Create Tip 🤯
+            </a>
+        </div>
+    </>)
+})
 

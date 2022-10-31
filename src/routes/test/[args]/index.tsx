@@ -15,8 +15,8 @@ import {
 
 } from "@bitauth/libauth";
 import { DocumentHead, useLocation } from '@builder.io/qwik-city';
-import { Keys } from '../../../interfaces'
-import { Contract, SignatureTemplate } from '@samrock5000/cashscript'
+// import { Keys } from '../../../interfaces'
+import { Contract, SignatureTemplate } from '../../../../cashS/dist/module' 
 import { getNewContract } from '../../../contracts'
 import { createWallet } from '../../../services'
 import { Spend } from '../../../components/spend'

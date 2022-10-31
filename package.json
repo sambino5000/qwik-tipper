@@ -23,7 +23,7 @@
     "@builder.io/qwik": "0.11.1",
     "@builder.io/qwik-city": "0.0.112",
     "@types/eslint": "8.4.6",
-    "@types/node": "latest",
+    "@types/node": "^18.11.7",
     "@typescript-eslint/eslint-plugin": "5.40.0",
     "@typescript-eslint/parser": "5.40.0",
     "eslint": "8.25.0",
@@ -35,9 +35,13 @@
     "vite-tsconfig-paths": "3.5.0"
   },
   "dependencies": {
-    "@samrock5000/cashscript": "^0.7.1",
     "@types/qrcode": "^1.5.0",
+    "@types/randombytes": "^2.0.0",
     "cashc": "0.6.5",
-    "qrcode": "^1.5.1"
+    "chronik-client": "^0.8.1",
+    "delay": "^5.0.0",
+    "lean-qr": "^1.5.0",
+    "qrcode": "^1.5.1",
+    "randombytes": "^2.1.0"
   }
 }

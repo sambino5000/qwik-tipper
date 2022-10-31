@@ -4,8 +4,9 @@ import {
     Contract,
     ChronikNetworkProvider,
     SignatureTemplate,
-} from "@samrock5000/cashscript";
-// import { randomBytes } from "crypto";
+} from "../../cashS/dist/module";
+import  randomBytes  from "randombytes";
+// import  {randomBytes}  from "crypto";
 import { ChronikClient } from "chronik-client";
 import { Keys, ContractArg } from '../interfaces'
 import {
@@ -69,10 +70,10 @@ export const createWallet = async (): Promise<ContractArg> => {
     const ripemd160 = await instantiateRipemd160();
     const sha256 = await instantiateSha256();
 
-    const secureRandom = generatePrivateKey( () =>
-  window.crypto.getRandomValues(new Uint8Array(32))
-);
-    // const secureRandom = generatePrivateKey(() => randomBytes(32));
+//     const secureRandom = generatePrivateKey( () =>
+//   window.crypto.getRandomValues(new Uint8Array(32))
+// );
+    const secureRandom = generatePrivateKey(() => randomBytes(32));
     const privateKey = sha256.hash(secureRandom)
 
     const privKeyHex: string = binToHex(privateKey);

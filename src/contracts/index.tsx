@@ -1,8 +1,8 @@
 // import { useWatch$, useStore } from '@builder.io/qwik';
 import { ChronikClient } from 'chronik-client'
-import { ChronikNetworkProvider, NetworkProvider, Argument, Contract } from '@samrock5000/cashscript'
+import { ChronikNetworkProvider, NetworkProvider, Argument, Contract, Artifact } from '../../cashS/dist/module'
 import { createWallet, addrToScriptHash } from '../services'
-import { Artifact, Network } from '@samrock5000/cashscript';
+// import { Artifact, Network } from '../../mod/cashtest/dist/module';
 
 import { compileString } from 'cashc';
 import type { ContractTypes } from '../interfaces'

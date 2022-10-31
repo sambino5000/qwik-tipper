@@ -1,4 +1,4 @@
-import  { Contract } from '@samrock5000/cashscript/dist/module/index.js'
+import  { Contract } from '../../cashS/dist/module'
 
 
 export interface ContractTypes {
